@@ -58,7 +58,9 @@ public class GridController implements Initializable{
                     rect.setFill(defaultFillColor);
                     rect.setStroke(StrokeColor);
                     rect.setStrokeWidth(1);
+                   //System.out.println("hello");
                 } else {
+                    
                     //get the color value
                     String hexColor = Tetrispiece.colors[currentGrid[i][j] - 1];
                     rect.setFill(Color.web(hexColor));

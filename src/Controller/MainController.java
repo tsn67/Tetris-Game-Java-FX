@@ -40,7 +40,7 @@ public class MainController implements Initializable{
             // gridMatrix[12][5] = 1; 
             // gridMatrix[13][4] = 1; 
             // gridMatrix[13][5] = 1;  
-            gameGrid.updateGrid();
+            // gameGrid.updateGrid();
             
             GameEngine gameEngine = new GameEngine(gameGrid);
             gameEngine.startGame();

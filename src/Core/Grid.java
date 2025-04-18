@@ -8,7 +8,7 @@ import javafx.scene.Node;
 public class Grid {
     
     /* - grid array representing the actual tetris grid */
-    private int[][] grid; 
+    public int[][] grid; 
 
     private GridController controller;
     private Node gridUiComponent;

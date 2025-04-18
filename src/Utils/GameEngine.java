@@ -1,6 +1,7 @@
 package Utils;
 
 import Core.Grid;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import java.util.Random;
 import Assets.Tetrispiece;
@@ -14,12 +15,15 @@ import Assets.Tetrispiece;
 
 public class GameEngine {
     
-    Grid grid;
-    Random random;
-    
+    public Grid grid;
+    private Random random;
+    public boolean isGameOver;
+
+
     public GameEngine(Grid grid) {
         this.grid = grid;
-        random = new Random();
+        this.random = new Random();
+        this.isGameOver = true;
     }
 
     
@@ -35,31 +39,78 @@ public class GameEngine {
         return randomColor + 1; //return 1+ indicate grid is not empty
     }
 
+    
+
     //this methode will start the gameloop(thread)
     public void startGame() {
         
-        Task<Void> task = new Task<>() {
-            
-            
-            @Override
-            protected Void call() throws Exception {
-                
-                /*importan: only one infinite loop in the game */
-                while(true) {
-                
-                    Thread.sleep(100);
-                    break;
-                }
-
-                return null;
-            }
-        };
-
-        Thread gameThread = new Thread(task);
+        
+        Thread gameThread = new Thread(new GameRunner(this));
         gameThread.setDaemon(true); // close thread when main window is closed
         gameThread.start();
+
+        //things to do after game over
     }
 
 }
 
+//entire game logic will be found inside this Task class (Thread)
+class GameRunner extends Task<Void> {
 
+    private GameEngine gameLoop;
+
+    public GameRunner(GameEngine gameLoop) {
+        this.gameLoop = gameLoop;
+        this.movementController = new Movements(this.gameLoop.grid);
+    }
+
+    private int colorValue;
+    private int[][] currentPiece; //always 3 x 3 matrix
+    //private int[][] prevPiece; //dimension of the current piece , before updation
+
+    private int timer = 0;
+    private int leftOffset = 2;
+    private int topOffset = 0;
+    private Movements movementController;
+
+    int testTimer = 0;
+
+    @Override
+    protected Void call() throws Exception {
+        while (true) {
+            if(gameLoop.isGameOver) {
+                gameLoop.isGameOver = false;
+                colorValue = gameLoop.generateColor();
+                currentPiece = gameLoop.generatePiece();
+                
+            } 
+
+            //logic to perform actions againts user inputs
+
+            
+            if(timer > 4) {
+                timer = 0;
+                //call down motion
+                int block =  this.movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
+                if(block == 1) {
+                    this.gameLoop.isGameOver = true;
+                }
+                topOffset++;
+                
+                
+                Platform.runLater(() -> {
+                    gameLoop.grid.updateGrid();
+                });
+            } else {
+                timer++;
+            }
+           
+            testTimer++;
+            if(gameLoop.isGameOver) break; //for testing only
+            Thread.sleep(100); 
+        }
+
+        gameLoop.isGameOver = true;
+        return null;
+    }
+}
