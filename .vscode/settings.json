@@ -1,0 +1,15 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.base.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.controls.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.fxml.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.graphics.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.media.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.swing.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx.web.jar",
+        "c:\\Users\\TOM SEBASTIAN\\Desktop\\javafx-sdk-17.0.10\\lib\\javafx-swt.jar"
+    ]
+}
