@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import Core.Grid;
+import Utils.GameEngine;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -32,6 +33,18 @@ public class MainController implements Initializable{
             this.mainFlowPane.setAlignment(Pos.CENTER);
             this.mainFlowPane.setHgap(10);
             this.mainFlowPane.getChildren().add(gridUIcomponent);
+
+            //just for testing
+            // int[][] gridMatrix = gameGrid.getGrid();
+            // gridMatrix[12][4] = 1;
+            // gridMatrix[12][5] = 1; 
+            // gridMatrix[13][4] = 1; 
+            // gridMatrix[13][5] = 1;  
+            gameGrid.updateGrid();
+            
+            GameEngine gameEngine = new GameEngine(gameGrid);
+            gameEngine.startGame();
+
         } catch(IOException e) {
             System.out.println("Cannot load the grid pane! "+e.getMessage());
             return;

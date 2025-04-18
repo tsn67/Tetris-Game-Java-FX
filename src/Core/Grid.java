@@ -8,13 +8,13 @@ import javafx.scene.Node;
 public class Grid {
     
     /* - grid array representing the actual tetris grid */
-    int[][] grid; 
+    private int[][] grid; 
 
     private GridController controller;
     private Node gridUiComponent;
 
     public Grid() {
-        grid = new int[20][10];
+        grid = new int[23][10]; //3 hidden rows to spawn each piece
         //initialize the grid to have 20 rows and 10 cols
     }
 
@@ -31,9 +31,16 @@ public class Grid {
         return this.gridUiComponent;
     }
 
+    public void clearGrid() {
+        for(int i = 0;i < grid.length;i++) 
+            for(int j = 0;j < grid[0].length;j++)
+                grid[i][j] = 0;
+    }
+
    
     public void updateGrid() {
-
+        //function just calls the ui component redraw without any processing
+        controller.reDrawGrid(grid);
     }
 
     public void initialize() throws IOException{
@@ -41,6 +48,7 @@ public class Grid {
         gridUiComponent = loader.load();
         controller = loader.getController();
         controller.initDraw(grid);
+        //controller.reDrawGrid(grid);
     }
 
 }
