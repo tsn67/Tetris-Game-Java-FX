@@ -17,13 +17,13 @@ public class GameEngine {
     
     public Grid grid;
     private Random random;
-    public boolean isGameOver;
-
+    public boolean isGameOver = false; //to check game status (active|game over)
+    public boolean pieceActive = false; //to know wehther there is a piece currently faling
 
     public GameEngine(Grid grid) {
         this.grid = grid;
         this.random = new Random();
-        this.isGameOver = true;
+       
     }
 
     
@@ -78,22 +78,24 @@ class GameRunner extends Task<Void> {
     @Override
     protected Void call() throws Exception {
         while (true) {
-            if(gameLoop.isGameOver) {
-                gameLoop.isGameOver = false;
+            if(!gameLoop.pieceActive) {
+                gameLoop.pieceActive = true;
                 colorValue = gameLoop.generateColor();
-                currentPiece = gameLoop.generatePiece();
-                
+                currentPiece = gameLoop.generatePiece(); 
+                topOffset = 0;
+                leftOffset = 5; 
+                timer = 0;
             } 
 
             //logic to perform actions againts user inputs
 
             
-            if(timer > 4) {
+            if(timer > 2) {
                 timer = 0;
                 //call down motion
                 int block =  this.movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
-                if(block == 1) {
-                    this.gameLoop.isGameOver = true;
+                if(block == -1) {
+                    this.gameLoop.pieceActive = false;
                 }
                 topOffset++;
                 

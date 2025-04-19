@@ -5,9 +5,11 @@ import Core.Grid;
 public class Movements {
 
     private Grid grid;
+    private CollisionChecker collisionController;
 
     public Movements(Grid grid) {
         this.grid = grid;
+        this.collisionController = new CollisionChecker();
     }
 
     // perform down action in the grid, just update teh piece value
@@ -15,7 +17,10 @@ public class Movements {
     // collision is not done yet
     public int downMovement(int[][] piece, int leftOffset, int topOffset, int colorValue) {
         
-        if(topOffset > grid.grid.length - 4) return -1; //block condition
+        //if(topOffset > grid.grid.length - 4) return -1; //block condition
+
+        if(this.collisionController.downCollisionCheck(grid.grid, piece, topOffset, leftOffset))
+            return -1;
 
         /*
          * need to detect other collisions also
