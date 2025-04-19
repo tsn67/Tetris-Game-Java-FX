@@ -4,18 +4,24 @@ import java.io.IOException;
 import Controller.GridController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 
 public class Grid {
     
     /* - grid array representing the actual tetris grid */
     public int[][] grid; 
+    
 
     private GridController controller;
     private Node gridUiComponent;
 
-    public Grid() {
+    public AnchorPane mainContainer;
+
+
+    public Grid(AnchorPane mainContainer) {
         grid = new int[23][10]; //3 hidden rows to spawn each piece
         //initialize the grid to have 20 rows and 10 cols
+        this.mainContainer = mainContainer;
     }
 
     public Grid(int rows, int cols) {
@@ -24,6 +30,7 @@ public class Grid {
     }
 
     public int[][] getGrid() {
+        
         return this.grid;
     }
 
@@ -42,6 +49,8 @@ public class Grid {
         //function just calls the ui component redraw without any processing
         controller.reDrawGrid(grid);
     }
+
+    
 
     public void initialize() throws IOException{
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Grid.fxml"));

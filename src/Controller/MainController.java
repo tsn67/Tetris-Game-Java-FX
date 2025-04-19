@@ -2,14 +2,20 @@ package Controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import Core.Grid;
 import Utils.GameEngine;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 
@@ -20,11 +26,21 @@ public class MainController implements Initializable{
 
     @FXML
     private FlowPane mainFlowPane;
+    private Grid gameGrid;
+
+    /*
+     * the function can only be implemented to a fxml component hence 
+     * implemented here, but function record keyevents and passes it to the Grid
+     * 
+     */
+   
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
-        Grid gameGrid = new Grid();
+       
+        gameGrid = new Grid(this.container);
+
         try {
             gameGrid.initialize();
             Node gridUIcomponent = gameGrid.getGridUI();
@@ -49,7 +65,10 @@ public class MainController implements Initializable{
             return;
         }
 
-
+        
+        
+    
+        Platform.runLater(() -> container.requestFocus());
         
     }
 

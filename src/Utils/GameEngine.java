@@ -1,9 +1,15 @@
 package Utils;
 
 import Core.Grid;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
+
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
+
 import Assets.Tetrispiece;
 
 /*
@@ -45,74 +51,93 @@ public class GameEngine {
     public void startGame() {
         
         
-        Thread gameThread = new Thread(new GameRunner(this));
-        gameThread.setDaemon(true); // close thread when main window is closed
+        GameRunner gameThread = new GameRunner(this);
+       
         gameThread.start();
 
         //things to do after game over
     }
 
 }
-
-//entire game logic will be found inside this Task class (Thread)
-class GameRunner extends Task<Void> {
+// GameRunner.java (inner class inside GameEngine)
+class GameRunner extends AnimationTimer {
 
     private GameEngine gameLoop;
+    private Movements movementController;
+
+    private int[][] currentPiece;
+    private int colorValue;
+
+    private int leftOffset = 4;
+    private int topOffset = 0;
+
+    private long lastFallUpdate = 0;
+    private long lastMoveDown = 0;
+
+    private final long FALL_INTERVAL = 700_000_000;  // 500 ms
+    private final long DOWN_INTERVAL = 40_000_000;  // 100 ms (for held key repeat)
+
+    private Set<KeyCode> userInputs;
 
     public GameRunner(GameEngine gameLoop) {
         this.gameLoop = gameLoop;
         this.movementController = new Movements(this.gameLoop.grid);
+        this.userInputs = new HashSet<>();
+
+        // Allow Pane to receive key inputs
+        this.gameLoop.grid.mainContainer.setFocusTraversable(true);
+
+        // Handle key press
+        this.gameLoop.grid.mainContainer.setOnKeyPressed(event -> {
+            userInputs.add(event.getCode());
+        });
+
+        // Handle key release
+        this.gameLoop.grid.mainContainer.setOnKeyReleased(event -> {
+            userInputs.remove(event.getCode());
+        });
     }
 
-    private int colorValue;
-    private int[][] currentPiece; //always 3 x 3 matrix
-    //private int[][] prevPiece; //dimension of the current piece , before updation
-
-    private int timer = 0;
-    private int leftOffset = 2;
-    private int topOffset = 0;
-    private Movements movementController;
-
-    int testTimer = 0;
-
     @Override
-    protected Void call() throws Exception {
-        while (true) {
-            if(!gameLoop.pieceActive) {
-                gameLoop.pieceActive = true;
-                colorValue = gameLoop.generateColor();
-                currentPiece = gameLoop.generatePiece(); 
-                topOffset = 0;
-                leftOffset = 5; 
-                timer = 0;
-            } 
-
-            //logic to perform actions againts user inputs
-
-            
-            if(timer > 2) {
-                timer = 0;
-                //call down motion
-                int block =  this.movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
-                if(block == -1) {
-                    this.gameLoop.pieceActive = false;
-                }
-                topOffset++;
-                
-                
-                Platform.runLater(() -> {
-                    gameLoop.grid.updateGrid();
-                });
-            } else {
-                timer++;
-            }
-           
-            testTimer++;
-            if(gameLoop.isGameOver) break; //for testing only
-            Thread.sleep(100); 
+    public void handle(long now) {
+        if (gameLoop.isGameOver) {
+            stop();
+            return;
         }
 
-        gameLoop.isGameOver = true;
-        return null;
+        // Generate new piece
+        if (!gameLoop.pieceActive) {
+            gameLoop.pieceActive = true;
+            currentPiece = gameLoop.generatePiece();
+            colorValue = gameLoop.generateColor();
+            topOffset = 0;
+            leftOffset = 4;
+            lastFallUpdate = now;
+            lastMoveDown = now;
+        }
+
+        // Fast down movement (when holding D key)
+        if (userInputs.contains(KeyCode.S) && now - lastMoveDown > DOWN_INTERVAL) {
+            int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
+            if (block == -1) {
+                gameLoop.pieceActive = false;
+            }
+            topOffset++;
+            lastMoveDown = now;
+            Platform.runLater(() -> gameLoop.grid.updateGrid());
+            lastFallUpdate = now; //this is made, so that user will get some more time after releasing the control
+            return;
+        }
+
+        // Auto fall
+        if (now - lastFallUpdate > FALL_INTERVAL) {
+            lastFallUpdate = now;
+            int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
+            if (block == -1) {
+                gameLoop.pieceActive = false;
+            }
+            topOffset++;
+            Platform.runLater(() -> gameLoop.grid.updateGrid());
+        }
     }
 }
