@@ -9,9 +9,9 @@ public class Tetrispiece {
     public static String[] colors = {"#16C79A", "#E94560"}; 
     public static int[][][] pieces = {
         {
-            {1, 1, 0}, //L piece 
-            {1, 0, 0},
-            {1, 0, 0}
+            {0, 1, 1}, //L piece 
+            {0, 1, 0},
+            {0, 1, 0}
         },
         {
             {0, 0, 0}, //t piece

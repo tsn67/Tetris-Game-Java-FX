@@ -26,7 +26,9 @@ public class GridController implements Initializable{
     private final Color StrokeColor = Color.GREY;
 
     public void initDraw(int[][] currentGrid) {
-
+        
+        //current rectable refernces must be cleared
+        gridPane.getChildren().clear();
         for(int i = 0;i < currentGrid.length;i++) {
             if(i < 3) continue;
             for(int j = 0;j < currentGrid[0].length;j++) {
@@ -42,6 +44,9 @@ public class GridController implements Initializable{
     }
 
     public void reDrawGrid(int[][] currentGrid) {
+        
+        //current rectable refernces must be cleared
+        gridPane.getChildren().clear();
 
         /*
          * function will redraw the grid based on the currentGrid matrix, do not perform any control activity

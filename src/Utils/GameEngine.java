@@ -5,7 +5,6 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
-
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -34,9 +33,14 @@ public class GameEngine {
 
     
     public int[][] generatePiece() {
-        int[][] testrisPiece = Tetrispiece.pieces[random.nextInt(Tetrispiece.pieces.length)]; 
-        return testrisPiece;
+        int[][] original = Tetrispiece.pieces[random.nextInt(Tetrispiece.pieces.length)];
+        int[][] copy = new int[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            copy[i] = original[i].clone(); // fast and safe
+        }
+        return copy;
     }
+    
 
 
     //no need to return the String color, just retunr the index of the color
@@ -74,10 +78,37 @@ class GameRunner extends AnimationTimer {
     private long lastFallUpdate = 0;
     private long lastMoveDown = 0;
 
-    private final long FALL_INTERVAL = 700_000_000;  // 500 ms
-    private final long DOWN_INTERVAL = 40_000_000;  // 100 ms (for held key repeat)
+    private final long FALL_INTERVAL = 600_000_000;  // 700 ms
+    private final long DOWN_INTERVAL = 40_000_000;  // 40 ms (for fast forward -down movement)
+    private final long RIGHT_INTERVAL = 20_000_000;
+
 
     private Set<KeyCode> userInputs;
+
+    private void fastForwardDownMovement(long now) {
+        int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
+        if (block == -1) {
+            gameLoop.pieceActive = false;
+        }
+        topOffset++;
+        lastMoveDown = now;
+        Platform.runLater(() -> gameLoop.grid.updateGrid());
+        lastFallUpdate = now; 
+        // this is made, so that user will get some more time after releasing the
+        // control
+    }
+
+    private void rightMove() {
+        int block = movementController.rightMovement(currentPiece, leftOffset, topOffset, colorValue);
+        if(block == 0) leftOffset++;
+        Platform.runLater(() -> gameLoop.grid.updateGrid());
+    }
+
+    private void leftMove() {
+        int block = movementController.leftMovement(currentPiece, leftOffset, topOffset, colorValue);
+        if(block == 0) leftOffset--;
+        Platform.runLater(() -> gameLoop.grid.updateGrid());
+    }
 
     public GameRunner(GameEngine gameLoop) {
         this.gameLoop = gameLoop;
@@ -105,8 +136,11 @@ class GameRunner extends AnimationTimer {
             return;
         }
 
-        // Generate new piece
         if (!gameLoop.pieceActive) {
+            // clear old references to help GC
+            currentPiece = null;
+        
+            // now assign new ones
             gameLoop.pieceActive = true;
             currentPiece = gameLoop.generatePiece();
             colorValue = gameLoop.generateColor();
@@ -115,19 +149,24 @@ class GameRunner extends AnimationTimer {
             lastFallUpdate = now;
             lastMoveDown = now;
         }
+        
 
-        // Fast down movement (when holding D key)
+        // Fast down movement (when holding S key)
         if (userInputs.contains(KeyCode.S) && now - lastMoveDown > DOWN_INTERVAL) {
-            int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
-            if (block == -1) {
-                gameLoop.pieceActive = false;
-            }
-            topOffset++;
-            lastMoveDown = now;
-            Platform.runLater(() -> gameLoop.grid.updateGrid());
-            lastFallUpdate = now; //this is made, so that user will get some more time after releasing the control
+            this.fastForwardDownMovement(now);
             return;
+        } else if (userInputs.contains(KeyCode.D) && now - lastMoveDown > RIGHT_INTERVAL) {
+            userInputs.remove(KeyCode.D);
+            this.rightMove();
+            return;
+        } else if (userInputs.contains(KeyCode.A) && now - lastMoveDown > RIGHT_INTERVAL) {
+            userInputs.remove(KeyCode.A);
+            this.leftMove();
+            return;
+            //same interval for left and right (RIGHT_INTERVAL)
         }
+
+        
 
         // Auto fall
         if (now - lastFallUpdate > FALL_INTERVAL) {

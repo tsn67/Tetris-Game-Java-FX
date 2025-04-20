@@ -12,6 +12,42 @@ public class Movements {
         this.collisionController = new CollisionChecker();
     }
 
+
+    public int rightMovement(int[][] piece, int leftOffset, int topOffset, int colorValue) {
+        if(this.collisionController.rightCollisionCheck(grid.grid, piece, topOffset, leftOffset))
+            return -1;
+        this.clearPieceFromGrid(piece, topOffset, leftOffset);
+        leftOffset += 1;
+        for (int i = 0; i < piece.length; i++) {
+            for (int j = 0; j < piece[0].length; j++) {
+                if (piece[i][j] != 0) {
+                    if (i + topOffset < grid.grid.length && j + leftOffset < grid.grid[0].length) {
+                        grid.grid[i + topOffset][j + leftOffset] = colorValue;
+                    }
+                }
+            }
+        }
+        return 0;
+    } 
+
+    public int leftMovement(int[][] piece, int leftOffset, int topOffset, int colorValue) {
+        if(this.collisionController.leftCollisionCheck(grid.grid, piece, topOffset, leftOffset))
+            return -1;
+        this.clearPieceFromGrid(piece, topOffset, leftOffset);
+        leftOffset -= 1;
+        for (int i = 0; i < piece.length; i++) {
+            for (int j = 0; j < piece[0].length; j++) {
+                if (piece[i][j] != 0) {
+                    if (i + topOffset < grid.grid.length && j + leftOffset < grid.grid[0].length) {
+                        grid.grid[i + topOffset][j + leftOffset] = colorValue;
+                    }
+                }
+            }
+        }
+        return 0;
+    } 
+
+
     // perform down action in the grid, just update teh piece value
     // consider teh function for review
     // collision is not done yet
