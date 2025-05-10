@@ -19,19 +19,18 @@ import Assets.Tetrispiece;
  */
 
 public class GameEngine {
-    
+
     public Grid grid;
     private Random random;
-    public boolean isGameOver = false; //to check game status (active|game over)
-    public boolean pieceActive = false; //to know wehther there is a piece currently faling
+    public boolean isGameOver = false; // to check game status (active|game over)
+    public boolean pieceActive = false; // to know wehther there is a piece currently faling
 
     public GameEngine(Grid grid) {
         this.grid = grid;
         this.random = new Random();
-       
+
     }
 
-    
     public int[][] generatePiece() {
         int[][] original = Tetrispiece.pieces[random.nextInt(Tetrispiece.pieces.length)];
         int[][] copy = new int[original.length][];
@@ -40,29 +39,25 @@ public class GameEngine {
         }
         return copy;
     }
-    
 
-
-    //no need to return the String color, just retunr the index of the color
+    // no need to return the String color, just retunr the index of the color
     public int generateColor() {
         int randomColor = random.nextInt(Tetrispiece.colors.length);
-        return randomColor + 1; //return 1+ indicate grid is not empty
+        return randomColor + 1; // return 1+ indicate grid is not empty
     }
 
-    
-
-    //this methode will start the gameloop(thread)
+    // this methode will start the gameloop(thread)
     public void startGame() {
-        
-        
+
         GameRunner gameThread = new GameRunner(this);
-       
+
         gameThread.start();
 
-        //things to do after game over
+        // things to do after game over
     }
 
 }
+
 // GameRunner.java (inner class inside GameEngine)
 class GameRunner extends AnimationTimer {
 
@@ -78,10 +73,9 @@ class GameRunner extends AnimationTimer {
     private long lastFallUpdate = 0;
     private long lastMoveDown = 0;
 
-    private final long FALL_INTERVAL = 600_000_000;  // 700 ms
-    private final long DOWN_INTERVAL = 40_000_000;  // 40 ms (for fast forward -down movement)
+    private final long FALL_INTERVAL = 600_000_000; // 700 ms
+    private final long DOWN_INTERVAL = 40_000_000; // 40 ms (for fast forward -down movement)
     private final long RIGHT_INTERVAL = 20_000_000;
-
 
     private Set<KeyCode> userInputs;
 
@@ -93,20 +87,28 @@ class GameRunner extends AnimationTimer {
         topOffset++;
         lastMoveDown = now;
         Platform.runLater(() -> gameLoop.grid.updateGrid());
-        lastFallUpdate = now; 
+        lastFallUpdate = now;
         // this is made, so that user will get some more time after releasing the
         // control
     }
 
     private void rightMove() {
         int block = movementController.rightMovement(currentPiece, leftOffset, topOffset, colorValue);
-        if(block == 0) leftOffset++;
+        if (block == 0)
+            leftOffset++;
         Platform.runLater(() -> gameLoop.grid.updateGrid());
     }
 
     private void leftMove() {
         int block = movementController.leftMovement(currentPiece, leftOffset, topOffset, colorValue);
-        if(block == 0) leftOffset--;
+        if (block == 0)
+            leftOffset--;
+        Platform.runLater(() -> gameLoop.grid.updateGrid());
+    }
+
+    private void rotate() {
+        // current piece is updated to it's transpose if successfull rotation
+        this.currentPiece = movementController.rotation(currentPiece, topOffset, leftOffset, false, this.colorValue);
         Platform.runLater(() -> gameLoop.grid.updateGrid());
     }
 
@@ -139,7 +141,7 @@ class GameRunner extends AnimationTimer {
         if (!gameLoop.pieceActive) {
             // clear old references to help GC
             currentPiece = null;
-        
+
             // now assign new ones
             gameLoop.pieceActive = true;
             currentPiece = gameLoop.generatePiece();
@@ -149,7 +151,6 @@ class GameRunner extends AnimationTimer {
             lastFallUpdate = now;
             lastMoveDown = now;
         }
-        
 
         // Fast down movement (when holding S key)
         if (userInputs.contains(KeyCode.S) && now - lastMoveDown > DOWN_INTERVAL) {
@@ -163,10 +164,12 @@ class GameRunner extends AnimationTimer {
             userInputs.remove(KeyCode.A);
             this.leftMove();
             return;
-            //same interval for left and right (RIGHT_INTERVAL)
+            // same interval for left and right (RIGHT_INTERVAL)
+        } else if (userInputs.contains(KeyCode.W) && now - lastMoveDown > RIGHT_INTERVAL) {
+            userInputs.remove(KeyCode.W);
+            this.rotate();
+            return;
         }
-
-        
 
         // Auto fall
         if (now - lastFallUpdate > FALL_INTERVAL) {
