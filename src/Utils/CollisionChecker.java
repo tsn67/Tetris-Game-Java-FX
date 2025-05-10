@@ -17,7 +17,9 @@ public class CollisionChecker {
                         }
                     }
 
-                    //second condition is the right boundary
+ 
+			
+		    //second condition is the right boundary
                     if(isRightMost) {
                         if ((j + left + 1) >= grid[0].length || grid[i + top][j + left + 1] != 0) {
                             return true;

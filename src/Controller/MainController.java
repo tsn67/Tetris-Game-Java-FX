@@ -19,8 +19,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 
-public class MainController implements Initializable{
-    
+public class MainController implements Initializable {
+
     @FXML
     private AnchorPane container;
 
@@ -29,16 +29,14 @@ public class MainController implements Initializable{
     private Grid gameGrid;
 
     /*
-     * the function can only be implemented to a fxml component hence 
+     * the function can only be implemented to a fxml component hence
      * implemented here, but function record keyevents and passes it to the Grid
      * 
      */
-   
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
-       
+
         gameGrid = new Grid(this.container);
 
         try {
@@ -49,27 +47,24 @@ public class MainController implements Initializable{
             this.mainFlowPane.setHgap(10);
             this.mainFlowPane.getChildren().add(gridUIcomponent);
 
-            //just for testing
+            // just for testing
             // int[][] gridMatrix = gameGrid.getGrid();
             // gridMatrix[12][4] = 1;
-            // gridMatrix[12][5] = 1; 
-            // gridMatrix[13][4] = 1; 
-            // gridMatrix[13][5] = 1;  
+            // gridMatrix[12][5] = 1;
+            // gridMatrix[13][4] = 1;
+            // gridMatrix[13][5] = 1;
             // gameGrid.updateGrid();
-            
+
             GameEngine gameEngine = new GameEngine(gameGrid);
             gameEngine.startGame();
 
-        } catch(IOException e) {
-            System.out.println("Cannot load the grid pane! "+e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Cannot load the grid pane! " + e.getMessage());
             return;
         }
 
-        
-        
-    
         Platform.runLater(() -> container.requestFocus());
-        
+
     }
 
 }
