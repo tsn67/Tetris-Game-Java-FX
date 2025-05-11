@@ -56,15 +56,13 @@ public class Movements {
         if (this.collisionController.downCollisionCheck(grid.grid, piece, topOffset, leftOffset))
             return -1;
 
-        /*
-         * need to detect other collisions also
-         * 
-         */
-
         this.clearPieceFromGrid(piece, topOffset, leftOffset);
 
         // Update offset
         topOffset += 1;
+        if (topOffset <= 3) {
+
+        }
 
         // Place piece one row down
         for (int i = 0; i < piece.length; i++) {

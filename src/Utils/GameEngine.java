@@ -3,7 +3,6 @@ package Utils;
 import Core.Grid;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import java.util.HashSet;
 import java.util.Random;
@@ -133,15 +132,20 @@ class GameRunner extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-        if (gameLoop.isGameOver) {
-            stop();
-            return;
-        }
 
         if (!gameLoop.pieceActive) {
+
+            // game over check!
+            if (new CollisionChecker().gameEndCheck(this.gameLoop.grid.grid, currentPiece,
+                    leftOffset, topOffset)) {
+                System.out.println("Game over!");
+                gameLoop.isGameOver = true;
+                this.stop();
+                return;
+            }
+
             // clear old references to help GC
             currentPiece = null;
-
             // now assign new ones
             gameLoop.pieceActive = true;
             currentPiece = gameLoop.generatePiece();
@@ -177,6 +181,8 @@ class GameRunner extends AnimationTimer {
             int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
             if (block == -1) {
                 gameLoop.pieceActive = false;
+                Platform.runLater(() -> gameLoop.grid.updateGrid());
+                return;
             }
             topOffset++;
             Platform.runLater(() -> gameLoop.grid.updateGrid());

@@ -39,7 +39,7 @@ public class Grid {
     public void clearGrid() {
         for (int i = 0; i < grid.length; i++)
             for (int j = 0; j < grid[0].length; j++)
-                grid[i][j] = 0;
+                grid[i][j] = 0; // 0 -denoting the cell is empty
     }
 
     public void updateGrid() {
