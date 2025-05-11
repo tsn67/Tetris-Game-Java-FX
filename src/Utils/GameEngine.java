@@ -5,9 +5,11 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import Assets.SoundPlayer;
 import Assets.Tetrispiece;
 
 /*
@@ -49,7 +51,6 @@ public class GameEngine {
     public void startGame() {
 
         GameRunner gameThread = new GameRunner(this);
-
         gameThread.start();
 
         // things to do after game over
@@ -82,6 +83,7 @@ class GameRunner extends AnimationTimer {
         int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
         if (block == -1) {
             gameLoop.pieceActive = false;
+            this.handleRowClear();
         }
         topOffset++;
         lastMoveDown = now;
@@ -130,6 +132,20 @@ class GameRunner extends AnimationTimer {
         });
     }
 
+    private void handleRowClear() {
+        List<Integer> rowsFilled = movementController.checkRowFilled();
+        // System.out.println(rowsFilled);
+        if (rowsFilled.size() != 0) {
+            for (int j = 0; j < rowsFilled.size(); j++) {
+                gameLoop.grid.clearRow(rowsFilled.get(j));
+                movementController.removeRow(rowsFilled.get(j));
+                SoundPlayer.play("/Assets/beepSound.wav");
+            }
+        }
+        Platform.runLater(() -> gameLoop.grid.updateGrid());
+        // update the entire grid so that no grid has blank row down
+    }
+
     @Override
     public void handle(long now) {
 
@@ -138,7 +154,7 @@ class GameRunner extends AnimationTimer {
             // game over check!
             if (new CollisionChecker().gameEndCheck(this.gameLoop.grid.grid, currentPiece,
                     leftOffset, topOffset)) {
-                System.out.println("Game over!");
+                // System.out.println("Game over!");
                 gameLoop.isGameOver = true;
                 this.stop();
                 return;
@@ -181,7 +197,8 @@ class GameRunner extends AnimationTimer {
             int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
             if (block == -1) {
                 gameLoop.pieceActive = false;
-                Platform.runLater(() -> gameLoop.grid.updateGrid());
+                // check for any row is completely filled or not
+                this.handleRowClear();
                 return;
             }
             topOffset++;

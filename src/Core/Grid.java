@@ -47,6 +47,12 @@ public class Grid {
         controller.reDrawGrid(grid);
     }
 
+    public void clearRow(int row) {
+        for (int j = 0; j < grid[0].length; j++) {
+            grid[row][j] = 0;
+        }
+    }
+
     public void initialize() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Grid.fxml"));
         gridUiComponent = loader.load();

@@ -1,5 +1,8 @@
 package Utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Core.Grid;
 
 public class Movements {
@@ -131,6 +134,37 @@ public class Movements {
         } else {
             return piece;
         } // till now only left rotation will change later
+    }
+
+    public List<Integer> checkRowFilled() {
+
+        List<Integer> list = new ArrayList<>();
+        for (int i = 3; i < grid.grid.length; i++) {
+            int flag = 0;
+            for (int j = 0; j < grid.grid[0].length; j++) {
+                if (grid.grid[i][j] == 0) {
+                    flag++;
+                    break;
+                }
+            }
+
+            if (flag == 0) {
+                list.add(i);
+            }
+        }
+        return list;
+    }
+
+    public void removeRow(int row) {
+
+        for (int i = grid.grid.length - 1; i >= 3; i--) {
+            if (i <= row) {
+                for (int j = 0; j < grid.grid[0].length; j++) {
+                    grid.grid[i][j] = grid.grid[i - 1][j];
+                }
+            }
+        }
+
     }
 
 }
