@@ -22,6 +22,7 @@ public class MainController implements Initializable {
     @FXML
     private FlowPane mainFlowPane;
     private Grid gameGrid;
+    private GameOverLabelController gameOverLabel;
 
     /*
      * the function can only be implemented to a fxml component hence
@@ -42,6 +43,7 @@ public class MainController implements Initializable {
             this.mainFlowPane.setHgap(10);
             this.mainFlowPane.getChildren().add(gridUIcomponent);
 
+            this.gameOverLabel = new GameOverLabelController(this.gameGrid);
             // just for testing
             // int[][] gridMatrix = gameGrid.getGrid();
             // gridMatrix[12][4] = 1;
@@ -50,7 +52,7 @@ public class MainController implements Initializable {
             // gridMatrix[13][5] = 1;
             // gameGrid.updateGrid();
 
-            GameEngine gameEngine = new GameEngine(gameGrid);
+            GameEngine gameEngine = new GameEngine(gameGrid, gameOverLabel);
             gameEngine.startGame();
 
         } catch (IOException e) {

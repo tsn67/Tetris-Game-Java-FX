@@ -11,6 +11,7 @@ import java.util.Set;
 
 import Assets.SoundPlayer;
 import Assets.Tetrispiece;
+import Controller.GameOverLabelController;
 
 /*
  * This class contains the thread(UI), that update the grid, current tetris peice, 
@@ -25,11 +26,12 @@ public class GameEngine {
     private Random random;
     public boolean isGameOver = false; // to check game status (active|game over)
     public boolean pieceActive = false; // to know wehther there is a piece currently faling
+    public GameOverLabelController gameOverLabel;
 
-    public GameEngine(Grid grid) {
+    public GameEngine(Grid grid, GameOverLabelController gameOverLabel) {
         this.grid = grid;
         this.random = new Random();
-
+        this.gameOverLabel = gameOverLabel;
     }
 
     public int[][] generatePiece() {
@@ -49,7 +51,6 @@ public class GameEngine {
 
     // this methode will start the gameloop(thread)
     public void startGame() {
-
         GameRunner gameThread = new GameRunner(this);
         gameThread.start();
 
@@ -148,15 +149,17 @@ class GameRunner extends AnimationTimer {
 
     @Override
     public void handle(long now) {
-
         if (!gameLoop.pieceActive) {
-
             // game over check!
             if (new CollisionChecker().gameEndCheck(this.gameLoop.grid.grid, currentPiece,
                     leftOffset, topOffset)) {
                 // System.out.println("Game over!");
                 gameLoop.isGameOver = true;
-                this.stop();
+                Platform.runLater(() -> {
+                    this.stop(); // only stop after showing label
+                    this.gameLoop.gameOverLabel.showLabel();
+                });
+                currentPiece = null;
                 return;
             }
 

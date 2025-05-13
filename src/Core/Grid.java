@@ -27,6 +27,10 @@ public class Grid {
         // custome grid in case - future use
     }
 
+    public GridController getGridController() {
+        return this.controller;
+    }
+
     public int[][] getGrid() {
 
         return this.grid;

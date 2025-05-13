@@ -2,9 +2,6 @@ package Controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.util.Duration;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
@@ -24,8 +21,8 @@ public class GridController implements Initializable {
     }
 
     // pane height and widht - won't change, constant
-    private final int gridPaneHeight = 500;
-    private final int gridPaneWidth = 250;
+    public final int gridPaneHeight = 500;
+    public final int gridPaneWidth = 250;
     private final Color defaultFillColor = Color.BLACK;
     private final Color StrokeColor = Color.GREY;
 
