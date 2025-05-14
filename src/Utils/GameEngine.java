@@ -140,7 +140,7 @@ class GameRunner extends AnimationTimer {
             for (int j = 0; j < rowsFilled.size(); j++) {
                 gameLoop.grid.clearRow(rowsFilled.get(j));
                 movementController.removeRow(rowsFilled.get(j));
-                SoundPlayer.play("/Assets/beepSound.wav");
+                SoundPlayer.play("/Assets/dngSound.wav");
             }
         }
         Platform.runLater(() -> gameLoop.grid.updateGrid());
@@ -159,6 +159,7 @@ class GameRunner extends AnimationTimer {
                     this.stop(); // only stop after showing label
                     this.gameLoop.gameOverLabel.showLabel();
                 });
+                SoundPlayer.play("/Assets/beepSound.wav");
                 currentPiece = null;
                 return;
             }

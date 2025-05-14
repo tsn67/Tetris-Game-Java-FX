@@ -24,7 +24,7 @@ public class GridController implements Initializable {
     public final int gridPaneHeight = 500;
     public final int gridPaneWidth = 250;
     private final Color defaultFillColor = Color.BLACK;
-    private final Color StrokeColor = Color.GREY;
+    private final String StrokeColor = "#393E46";
 
     public void initDraw(int[][] currentGrid) {
         // current rectable refernces must be cleared
@@ -36,7 +36,7 @@ public class GridController implements Initializable {
                 Rectangle rect = new Rectangle(j * 25, (i - 3) * 25, 25, 25); // i - 3 performed to avoide first 3
                                                                               // hidden rows
                 rect.setFill(defaultFillColor);
-                rect.setStroke(StrokeColor);
+                rect.setStroke(Color.web(this.StrokeColor));
                 rect.setStrokeWidth(1);
 
                 this.gridPane.getChildren().add(rect);
@@ -49,7 +49,6 @@ public class GridController implements Initializable {
 
         // current rectable refernces must be cleared
         gridPane.getChildren().clear();
-
         /*
          * function will redraw the grid based on the currentGrid matrix, do not perform
          * any control activity
@@ -67,7 +66,7 @@ public class GridController implements Initializable {
                                                                               // hidden rows
                 if (currentGrid[i][j] == 0) {
                     rect.setFill(defaultFillColor);
-                    rect.setStroke(StrokeColor);
+                    rect.setStroke(Color.web(this.StrokeColor));
                     rect.setStrokeWidth(1);
                     // System.out.println("hello");
                 } else {
