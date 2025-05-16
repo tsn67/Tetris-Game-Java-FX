@@ -3,6 +3,8 @@ package Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import Core.ButtonHighlight;
 import Core.Grid;
 import Utils.GameEngine;
 import javafx.application.Platform;
@@ -13,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 
 public class MainController implements Initializable {
 
@@ -20,10 +23,13 @@ public class MainController implements Initializable {
     private AnchorPane container;
 
     @FXML
+    private StackPane leftContainer;
+
+    @FXML
     private FlowPane mainFlowPane;
     private Grid gameGrid;
     private GameOverLabelController gameOverLabel;
-
+    private ButtonHighlight buttonHighLighter;
     /*
      * the function can only be implemented to a fxml component hence
      * implemented here, but function record keyevents and passes it to the Grid
@@ -34,7 +40,7 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         gameGrid = new Grid(this.container);
-
+        buttonHighLighter = new ButtonHighlight();
         try {
             gameGrid.initialize();
             Node gridUIcomponent = gameGrid.getGridUI();
@@ -42,6 +48,11 @@ public class MainController implements Initializable {
             this.mainFlowPane.setAlignment(Pos.CENTER);
             this.mainFlowPane.setHgap(10);
             this.mainFlowPane.getChildren().add(gridUIcomponent);
+
+            // start button hightlight add to left stack pane
+            buttonHighLighter.initialize();
+            this.leftContainer.setAlignment(Pos.TOP_CENTER);
+            this.leftContainer.getChildren().add(buttonHighLighter.getButtonHighLightComponent());
 
             this.gameOverLabel = new GameOverLabelController(this.gameGrid);
             // just for testing
@@ -52,7 +63,8 @@ public class MainController implements Initializable {
             // gridMatrix[13][5] = 1;
             // gameGrid.updateGrid();
 
-            GameEngine gameEngine = new GameEngine(gameGrid, gameOverLabel);
+            GameEngine gameEngine = new GameEngine(gameGrid, gameOverLabel,
+                    buttonHighLighter.buttonHighLightController);
             gameEngine.startGame();
 
         } catch (IOException e) {

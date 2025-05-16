@@ -11,6 +11,7 @@ import java.util.Set;
 
 import Assets.SoundPlayer;
 import Assets.Tetrispiece;
+import Controller.ButtonContainerController;
 import Controller.GameOverLabelController;
 
 /*
@@ -27,11 +28,13 @@ public class GameEngine {
     public boolean isGameOver = false; // to check game status (active|game over)
     public boolean pieceActive = false; // to know wehther there is a piece currently faling
     public GameOverLabelController gameOverLabel;
+    public ButtonContainerController highLightController;
 
-    public GameEngine(Grid grid, GameOverLabelController gameOverLabel) {
+    public GameEngine(Grid grid, GameOverLabelController gameOverLabel, ButtonContainerController higLightController) {
         this.grid = grid;
         this.random = new Random();
         this.gameOverLabel = gameOverLabel;
+        this.highLightController = higLightController;
     }
 
     public int[][] generatePiece() {
@@ -178,18 +181,22 @@ class GameRunner extends AnimationTimer {
 
         // Fast down movement (when holding S key)
         if (userInputs.contains(KeyCode.S) && now - lastMoveDown > DOWN_INTERVAL) {
+            this.gameLoop.highLightController.buttonFadeInOutAnimation("s");
             this.fastForwardDownMovement(now);
             return;
         } else if (userInputs.contains(KeyCode.D) && now - lastMoveDown > RIGHT_INTERVAL) {
+            this.gameLoop.highLightController.buttonFadeInOutAnimation("d");
             userInputs.remove(KeyCode.D);
             this.rightMove();
             return;
         } else if (userInputs.contains(KeyCode.A) && now - lastMoveDown > RIGHT_INTERVAL) {
+            this.gameLoop.highLightController.buttonFadeInOutAnimation("a");
             userInputs.remove(KeyCode.A);
             this.leftMove();
             return;
             // same interval for left and right (RIGHT_INTERVAL)
         } else if (userInputs.contains(KeyCode.W) && now - lastMoveDown > RIGHT_INTERVAL) {
+            this.gameLoop.highLightController.buttonFadeInOutAnimation("w");
             userInputs.remove(KeyCode.W);
             this.rotate();
             return;
