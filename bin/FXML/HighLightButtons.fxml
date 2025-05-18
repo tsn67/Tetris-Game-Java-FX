@@ -28,22 +28,22 @@
             <Font name="Arial" size="22.0" />
          </font>
       </Button>
-      <ImageView fitHeight="36.0" fitWidth="33.0" layoutX="133.0" layoutY="34.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="137.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Assets/rotate.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="33.0" layoutX="246.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="20.0">
+      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="246.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="27.0">
          <image>
             <Image url="@../Assets/rightArrow.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="50.0" layoutX="14.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" rotate="180.0" AnchorPane.leftAnchor="14.0">
+      <ImageView fitHeight="27.0" fitWidth="36.0" layoutX="26.0" layoutY="155.0" pickOnBounds="true" preserveRatio="true" rotate="180.0" AnchorPane.leftAnchor="26.0">
          <image>
             <Image url="@../Assets/rightArrow.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="36.0" fitWidth="36.0" layoutX="131.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="137.0" layoutY="204.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Assets/downArrow.png" />
          </image>

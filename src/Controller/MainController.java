@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import Core.ButtonHighlight;
 import Core.Grid;
+import Core.PreviewWindow;
 import Utils.GameEngine;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -26,10 +27,14 @@ public class MainController implements Initializable {
     private StackPane leftContainer;
 
     @FXML
+    private StackPane rightContainer;
+
+    @FXML
     private FlowPane mainFlowPane;
     private Grid gameGrid;
     private GameOverLabelController gameOverLabel;
     private ButtonHighlight buttonHighLighter;
+    private PreviewWindow previewWindow;
     /*
      * the function can only be implemented to a fxml component hence
      * implemented here, but function record keyevents and passes it to the Grid
@@ -41,6 +46,7 @@ public class MainController implements Initializable {
 
         gameGrid = new Grid(this.container);
         buttonHighLighter = new ButtonHighlight();
+        previewWindow = new PreviewWindow();
         try {
             gameGrid.initialize();
             Node gridUIcomponent = gameGrid.getGridUI();
@@ -51,8 +57,13 @@ public class MainController implements Initializable {
 
             // start button hightlight add to left stack pane
             buttonHighLighter.initialize();
+            previewWindow.initialize();
+
             this.leftContainer.setAlignment(Pos.TOP_CENTER);
             this.leftContainer.getChildren().add(buttonHighLighter.getButtonHighLightComponent());
+
+            this.rightContainer.setAlignment(Pos.TOP_CENTER);
+            this.rightContainer.getChildren().add(previewWindow.containerPane);
 
             this.gameOverLabel = new GameOverLabelController(this.gameGrid);
             // just for testing
@@ -64,7 +75,7 @@ public class MainController implements Initializable {
             // gameGrid.updateGrid();
 
             GameEngine gameEngine = new GameEngine(gameGrid, gameOverLabel,
-                    buttonHighLighter.buttonHighLightController);
+                    buttonHighLighter.buttonHighLightController, previewWindow.previewController);
             gameEngine.startGame();
 
         } catch (IOException e) {

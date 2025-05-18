@@ -13,6 +13,7 @@ import Assets.SoundPlayer;
 import Assets.Tetrispiece;
 import Controller.ButtonContainerController;
 import Controller.GameOverLabelController;
+import Controller.PreviewController;
 
 /*
  * This class contains the thread(UI), that update the grid, current tetris peice, 
@@ -29,12 +30,15 @@ public class GameEngine {
     public boolean pieceActive = false; // to know wehther there is a piece currently faling
     public GameOverLabelController gameOverLabel;
     public ButtonContainerController highLightController;
+    public PreviewController previewController;
 
-    public GameEngine(Grid grid, GameOverLabelController gameOverLabel, ButtonContainerController higLightController) {
+    public GameEngine(Grid grid, GameOverLabelController gameOverLabel, ButtonContainerController higLightController,
+            PreviewController previewController) {
         this.grid = grid;
         this.random = new Random();
         this.gameOverLabel = gameOverLabel;
         this.highLightController = higLightController;
+        this.previewController = previewController;
     }
 
     public int[][] generatePiece() {
@@ -69,7 +73,9 @@ class GameRunner extends AnimationTimer {
     private Movements movementController;
 
     private int[][] currentPiece;
+    private int[][] nextPiece;
     private int colorValue;
+    private int nextColorValue;
 
     private int leftOffset = 4;
     private int topOffset = 0;
@@ -134,6 +140,9 @@ class GameRunner extends AnimationTimer {
         this.gameLoop.grid.mainContainer.setOnKeyReleased(event -> {
             userInputs.remove(event.getCode());
         });
+
+        this.nextPiece = gameLoop.generatePiece();
+        this.nextColorValue = gameLoop.generateColor();
     }
 
     private void handleRowClear() {
@@ -166,13 +175,14 @@ class GameRunner extends AnimationTimer {
                 currentPiece = null;
                 return;
             }
-
             // clear old references to help GC
-            currentPiece = null;
+            currentPiece = nextPiece;
+            nextPiece = gameLoop.generatePiece();
             // now assign new ones
             gameLoop.pieceActive = true;
-            currentPiece = gameLoop.generatePiece();
-            colorValue = gameLoop.generateColor();
+            colorValue = nextColorValue;
+            nextColorValue = gameLoop.generateColor();
+            gameLoop.previewController.redraw(nextPiece, nextColorValue);
             topOffset = 0;
             leftOffset = 4;
             lastFallUpdate = now;
