@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import Core.ButtonHighlight;
 import Core.Grid;
 import Core.PreviewWindow;
+import Core.ScoreWindow;
 import Utils.GameEngine;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,7 +17,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 public class MainController implements Initializable {
 
@@ -24,7 +27,7 @@ public class MainController implements Initializable {
     private AnchorPane container;
 
     @FXML
-    private StackPane leftContainer;
+    private VBox leftContainer;
 
     @FXML
     private StackPane rightContainer;
@@ -35,6 +38,7 @@ public class MainController implements Initializable {
     private GameOverLabelController gameOverLabel;
     private ButtonHighlight buttonHighLighter;
     private PreviewWindow previewWindow;
+    private ScoreWindow scoreWindow;
     /*
      * the function can only be implemented to a fxml component hence
      * implemented here, but function record keyevents and passes it to the Grid
@@ -47,6 +51,7 @@ public class MainController implements Initializable {
         gameGrid = new Grid(this.container);
         buttonHighLighter = new ButtonHighlight();
         previewWindow = new PreviewWindow();
+        scoreWindow = new ScoreWindow();
         try {
             gameGrid.initialize();
             Node gridUIcomponent = gameGrid.getGridUI();
@@ -74,8 +79,13 @@ public class MainController implements Initializable {
             // gridMatrix[13][5] = 1;
             // gameGrid.updateGrid();
 
+            scoreWindow.initialize();
+            // add score window to right stackpane
+            this.leftContainer.getChildren().add(scoreWindow.scoreContainer);
+
             GameEngine gameEngine = new GameEngine(gameGrid, gameOverLabel,
-                    buttonHighLighter.buttonHighLightController, previewWindow.previewController);
+                    buttonHighLighter.buttonHighLightController, previewWindow.previewController,
+                    scoreWindow.scoreController);
             gameEngine.startGame();
 
         } catch (IOException e) {

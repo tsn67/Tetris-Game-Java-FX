@@ -14,6 +14,7 @@ import Assets.Tetrispiece;
 import Controller.ButtonContainerController;
 import Controller.GameOverLabelController;
 import Controller.PreviewController;
+import Controller.ScoreController;
 
 /*
  * This class contains the thread(UI), that update the grid, current tetris peice, 
@@ -31,14 +32,16 @@ public class GameEngine {
     public GameOverLabelController gameOverLabel;
     public ButtonContainerController highLightController;
     public PreviewController previewController;
+    public ScoreController scoreController;
 
     public GameEngine(Grid grid, GameOverLabelController gameOverLabel, ButtonContainerController higLightController,
-            PreviewController previewController) {
+            PreviewController previewController, ScoreController scoreController) {
         this.grid = grid;
         this.random = new Random();
         this.gameOverLabel = gameOverLabel;
         this.highLightController = higLightController;
         this.previewController = previewController;
+        this.scoreController = scoreController;
     }
 
     public int[][] generatePiece() {
@@ -93,6 +96,7 @@ class GameRunner extends AnimationTimer {
         int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
         if (block == -1) {
             gameLoop.pieceActive = false;
+            gameLoop.scoreController.increment();
             this.handleRowClear();
         }
         topOffset++;
@@ -218,6 +222,7 @@ class GameRunner extends AnimationTimer {
             int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
             if (block == -1) {
                 gameLoop.pieceActive = false;
+                gameLoop.scoreController.increment();
                 // check for any row is completely filled or not
                 this.handleRowClear();
                 return;
