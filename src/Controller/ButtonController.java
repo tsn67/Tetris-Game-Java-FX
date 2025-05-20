@@ -21,7 +21,6 @@ public class ButtonController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     @FXML
@@ -42,5 +41,9 @@ public class ButtonController implements Initializable {
 
     public Button getPauseButton() {
         return this.pauseButton;
+    }
+
+    public void changeButtonText(String text) {
+        this.pauseButton.setText(text);
     }
 }

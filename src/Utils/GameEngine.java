@@ -50,6 +50,7 @@ public class GameEngine {
         this.buttonController.getRestartButton().setOnAction(event -> {
             this.restartGame();
         });
+
     }
 
     public int[][] generatePiece() {
@@ -133,6 +134,8 @@ class GameRunner extends AnimationTimer {
 
     public Set<KeyCode> userInputs;
 
+    private boolean paused = false;
+
     public void cleanUp() {
         this.userInputs.clear();
     }
@@ -194,6 +197,13 @@ class GameRunner extends AnimationTimer {
         this.nextColorValue = gameLoop.generateColor();
 
         this.gameLoop.grid.mainContainer.setFocusTraversable(true);
+
+        this.gameLoop.buttonController.changeButtonText("Pause");
+        this.paused = false;
+        this.gameLoop.buttonController.getPauseButton().setOnAction(event -> {
+            this.paused = !this.paused;
+            gameLoop.buttonController.changeButtonText(this.paused ? "Resume" : "Pause");
+        });
     }
 
     private void handleRowClear() {
@@ -213,6 +223,7 @@ class GameRunner extends AnimationTimer {
     @Override
     public void handle(long now) {
         if (!gameLoop.pieceActive) {
+
             // game over check!
             if (new CollisionChecker().gameEndCheck(this.gameLoop.grid.grid, currentPiece,
                     leftOffset, topOffset)) {
@@ -240,6 +251,10 @@ class GameRunner extends AnimationTimer {
             lastMoveDown = now;
         }
 
+        if (this.paused) {
+            userInputs.clear();
+            return;
+        }
         // Fast down movement (when holding S key)
         if (userInputs.contains(KeyCode.S) && now - lastMoveDown > DOWN_INTERVAL) {
             this.gameLoop.highLightController.buttonFadeInOutAnimation("s");
