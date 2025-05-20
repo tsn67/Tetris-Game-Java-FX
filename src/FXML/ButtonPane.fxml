@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="250.0" spacing="32.0" style="-fx-background-color: black; -fx-background-radius: 10px; -fx-border-radius: 5px; -fx-background-radius: 10px;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ButtonController">
+   <children>
+      <Button fx:id="pauseButton" mnemonicParsing="false" onMouseEntered="#buttonHover" onMouseExited="#buttonHoverExit" prefHeight="42.0" prefWidth="193.0" style="-fx-background-color: #4E6688; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Pause" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="restartButton" mnemonicParsing="false" onMouseEntered="#buttonHover" onMouseExited="#buttonHoverExit" prefHeight="42.0" prefWidth="193.0" style="-fx-background-color: #4E6688; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Restart" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</VBox>

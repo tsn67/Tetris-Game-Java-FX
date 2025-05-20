@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import Core.ButtonControl;
 import Core.ButtonHighlight;
 import Core.Grid;
 import Core.PreviewWindow;
@@ -17,8 +18,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class MainController implements Initializable {
@@ -30,7 +29,10 @@ public class MainController implements Initializable {
     private VBox leftContainer;
 
     @FXML
-    private StackPane rightContainer;
+    private VBox rightContainer;
+
+    @FXML
+    private ButtonControl buttonControl;
 
     @FXML
     private FlowPane mainFlowPane;
@@ -52,6 +54,7 @@ public class MainController implements Initializable {
         buttonHighLighter = new ButtonHighlight();
         previewWindow = new PreviewWindow();
         scoreWindow = new ScoreWindow();
+        buttonControl = new ButtonControl();
         try {
             gameGrid.initialize();
             Node gridUIcomponent = gameGrid.getGridUI();
@@ -83,9 +86,12 @@ public class MainController implements Initializable {
             // add score window to right stackpane
             this.leftContainer.getChildren().add(scoreWindow.scoreContainer);
 
+            buttonControl.initialize();
+            this.rightContainer.getChildren().add(buttonControl.container);
+
             GameEngine gameEngine = new GameEngine(gameGrid, gameOverLabel,
                     buttonHighLighter.buttonHighLightController, previewWindow.previewController,
-                    scoreWindow.scoreController);
+                    scoreWindow.scoreController, buttonControl.buttonController);
             gameEngine.startGame();
 
         } catch (IOException e) {

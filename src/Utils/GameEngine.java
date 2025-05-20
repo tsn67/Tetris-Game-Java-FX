@@ -12,6 +12,7 @@ import java.util.Set;
 import Assets.SoundPlayer;
 import Assets.Tetrispiece;
 import Controller.ButtonContainerController;
+import Controller.ButtonController;
 import Controller.GameOverLabelController;
 import Controller.PreviewController;
 import Controller.ScoreController;
@@ -33,15 +34,22 @@ public class GameEngine {
     public ButtonContainerController highLightController;
     public PreviewController previewController;
     public ScoreController scoreController;
+    public ButtonController buttonController;
 
     public GameEngine(Grid grid, GameOverLabelController gameOverLabel, ButtonContainerController higLightController,
-            PreviewController previewController, ScoreController scoreController) {
+            PreviewController previewController, ScoreController scoreController, ButtonController buttonController) {
         this.grid = grid;
         this.random = new Random();
         this.gameOverLabel = gameOverLabel;
         this.highLightController = higLightController;
         this.previewController = previewController;
         this.scoreController = scoreController;
+        this.buttonController = buttonController;
+
+        // event handler for restart game
+        this.buttonController.getRestartButton().setOnAction(event -> {
+            this.restartGame();
+        });
     }
 
     public int[][] generatePiece() {
@@ -59,12 +67,45 @@ public class GameEngine {
         return randomColor + 1; // return 1+ indicate grid is not empty
     }
 
+    GameRunner gameThread = null;
+
     // this methode will start the gameloop(thread)
     public void startGame() {
-        GameRunner gameThread = new GameRunner(this);
-        gameThread.start();
+        this.gameThread = new GameRunner(this);
+        this.gameThread.start();
 
-        // things to do after game over
+        grid.mainContainer.setFocusTraversable(true);
+        grid.mainContainer.setOnKeyPressed(event -> {
+            if (this.gameThread != null) {
+                this.gameThread.userInputs.add(event.getCode());
+            }
+        });
+
+        grid.mainContainer.setOnKeyReleased(event -> {
+            if (this.gameThread != null) {
+                this.gameThread.userInputs.remove(event.getCode());
+            }
+        });
+
+        // Ensure the container has focus
+        Platform.runLater(() -> grid.mainContainer.requestFocus());
+
+    }
+
+    public void restartGame() {
+        if (this.gameThread != null) {
+            this.gameThread.stop();
+            this.gameThread.cleanUp(); // <-- add this
+            this.gameThread = null;
+        }
+        this.grid.clearGrid();
+        this.isGameOver = false;
+        this.pieceActive = false;
+        this.grid.clearEntireGrid();
+        this.scoreController.resetScore();
+
+        Platform.runLater(() -> this.grid.mainContainer.requestFocus());
+        this.startGame();
     }
 
 }
@@ -90,7 +131,11 @@ class GameRunner extends AnimationTimer {
     private final long DOWN_INTERVAL = 40_000_000; // 40 ms (for fast forward -down movement)
     private final long RIGHT_INTERVAL = 20_000_000;
 
-    private Set<KeyCode> userInputs;
+    public Set<KeyCode> userInputs;
+
+    public void cleanUp() {
+        this.userInputs.clear();
+    }
 
     private void fastForwardDownMovement(long now) {
         int block = movementController.downMovement(currentPiece, leftOffset, topOffset, colorValue);
@@ -147,6 +192,8 @@ class GameRunner extends AnimationTimer {
 
         this.nextPiece = gameLoop.generatePiece();
         this.nextColorValue = gameLoop.generateColor();
+
+        this.gameLoop.grid.mainContainer.setFocusTraversable(true);
     }
 
     private void handleRowClear() {
