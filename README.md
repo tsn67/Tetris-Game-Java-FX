@@ -1,18 +1,56 @@
-## Getting Started
+# Tetris Game
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+![Tetris Game Banner](./images/tetris_banner.png)  
+*A classic Tetris game built with [your tech stack — e.g., JavaScript, Java, Python, etc.]*
 
-## Folder Structure
+---
 
-The workspace contains two folders by default, where:
+## Table of Contents
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- [About](#about)  
+- [Features](#features)  
+- [Screenshots](#screenshots)  
+- [Installation](#installation)  
+- [Usage](#usage)  
+- [Controls](#controls)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+---
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## About
 
-## Dependency Management
+This is a classic **Tetris** game implementation. The game features falling blocks, line clearing, and increasing difficulty levels. The goal is to keep the blocks from stacking to the top of the playfield.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+---
+
+## Features
+
+- Classic Tetris gameplay  
+- Smooth block movements and rotations  
+- Line clear animations  
+- Increasing speed with levels  
+- Score tracking  
+- Pause and resume functionality  
+
+---
+
+## Screenshots
+
+### Main Game Screen  
+![Main Game](./images/gameplay.png)
+
+### Pause Menu  
+![Pause Menu](./images/pause_menu.png)
+
+### Game Over Screen  
+![Game Over](./images/game_over.png)
+
+---
+
+## Installation
+
+1. Clone the repo  
+   ```bash
+   git clone https://github.com/yourusername/tetris-game.git
+   cd tetris-game
