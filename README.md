@@ -12,9 +12,6 @@
 - [Screenshots](#screenshots)  
 - [Installation](#installation)  
 - [Usage](#usage)  
-- [Controls](#controls)  
-- [Contributing](#contributing)  
-- [License](#license)  
 
 ---
 
@@ -28,8 +25,6 @@ This is a classic **Tetris** game implementation. The game features falling bloc
 
 - Classic Tetris gameplay  
 - Smooth block movements and rotations  
-- Line clear animations  
-- Increasing speed with levels  
 - Score tracking  
 - Pause and resume functionality  
 
