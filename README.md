@@ -1,7 +1,7 @@
 # Tetris Game
 
 ![Tetris Game Banner](./images/tetris_banner.png)  
-*A classic Tetris game built with [your tech stack — e.g., JavaScript, Java, Python, etc.]*
+*A classic Tetris game built with [java, javafx, fxml]*
 
 ---
 
