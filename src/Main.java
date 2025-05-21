@@ -13,7 +13,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("./FXML/Main.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/Main.fxml"));
         Parent root = loader.load();
 
         MainController mainController = loader.getController();
